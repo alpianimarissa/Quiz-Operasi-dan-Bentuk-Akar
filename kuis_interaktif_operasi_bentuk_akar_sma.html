@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif: Operasi & Aturan Bentuk Akar (30 Soal)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering math equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                        $\sqrt{x}$
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Kuis FormAkar (30 Soal)</h1>
+                        <p class="text-xs text-slate-500 font-medium">Matematika SMA Kelas X</p>
+                    </div>
+                </div>
+
+                <!-- Stats Badges -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <div class="bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-blue-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Progres: <strong id="prog-text">0/30</strong></span>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-trophy"></i>
+                        <span>Skor: <strong id="score-text">0</strong></span>
+                    </div>
+                    <button onclick="confirmReset()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 text-xs font-bold rounded-xl transition flex items-center gap-1.5" title="Reset semua jawaban">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span class="hidden sm:inline">Reset</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+        <div class="grid lg:grid-cols-12 gap-6 items-start">
+
+            <!-- Sidebar Nav / Question Palette (4 cols) -->
+            <div class="lg:col-span-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-grip text-blue-600"></i> Navigasi Soal
+                    </h2>
+                    <span id="completion-status" class="text-xs font-medium text-slate-500">0% Selesai</span>
+                </div>
+
+                <!-- Status Legend -->
+                <div class="grid grid-cols-3 gap-2 text-[11px] text-slate-600 font-medium pb-2 border-b border-slate-100">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-md bg-slate-100 border border-slate-300"></span> Belum
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-md bg-emerald-500"></span> Benar
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-md bg-rose-500"></span> Salah
+                    </div>
+                </div>
+
+                <!-- Question Buttons Grid -->
+                <div id="question-grid" class="grid grid-cols-6 sm:grid-cols-10 lg:grid-cols-6 gap-2 max-h-[380px] overflow-y-auto pr-1">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+
+                <!-- Summary / Finish Button -->
+                <button onclick="showSummaryModal()" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl text-xs shadow-md flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-chart-pie"></i> Lihat Rangkuman Hasil
+                </button>
+            </div>
+
+            <!-- Main Question Area (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    
+                    <!-- Question Header Tag & Controls -->
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <div class="flex items-center gap-2">
+                            <span id="q-number-badge" class="px-3 py-1 bg-blue-100 text-blue-700 font-extrabold text-xs rounded-lg">
+                                Soal 1 dari 30
+                            </span>
+                            <span id="q-category-tag" class="px-2.5 py-1 bg-slate-100 text-slate-600 font-medium text-xs rounded-lg">
+                                Category
+                            </span>
+                        </div>
+                        <span id="q-status-badge" class="text-xs font-semibold px-2.5 py-1 rounded-md hidden"></span>
+                    </div>
+
+                    <!-- Question Text -->
+                    <div class="space-y-2">
+                        <div id="q-text" class="text-slate-800 font-medium text-base sm:text-lg leading-relaxed">
+                            <!-- Question rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Options Grid -->
+                    <div id="options-container" class="grid sm:grid-cols-2 gap-3 pt-2">
+                        <!-- Options rendered dynamically -->
+                    </div>
+
+                    <!-- Immediate Explanation Box (Visible after answer) -->
+                    <div id="explanation-box" class="hidden p-4 rounded-xl space-y-2 text-sm border">
+                        <p class="font-bold flex items-center gap-2 text-xs uppercase tracking-wider" id="exp-title">
+                            <i class="fa-solid fa-lightbulb"></i> Pembahasan:
+                        </p>
+                        <div id="exp-content" class="text-slate-700 space-y-1 leading-relaxed text-sm"></div>
+                    </div>
+
+                    <!-- Bottom Nav Buttons -->
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                        <button onclick="prevQuestion()" id="btn-prev" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-arrow-left"></i> Sebelumnya
+                        </button>
+
+                        <div class="text-xs text-slate-400 font-semibold">
+                            Gunakan tombol navigasi atau grid untuk berpindah
+                        </div>
+
+                        <button onclick="nextQuestion()" id="btn-next" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm rounded-xl transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+                            Selanjutnya <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Rangkuman -->
+    <div id="summary-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-fadeIn">
+            <button onclick="hideSummaryModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+                    <i class="fa-solid fa-chart-column"></i>
+                </div>
+                <h3 class="text-xl font-extrabold text-slate-800">Rangkuman Performa Kuis</h3>
+                <p class="text-xs text-slate-500">Hasil pengerjaan kuis operasi & aturan bentuk akar</p>
+            </div>
+
+            <!-- Score Stats Grid -->
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="p-3 bg-blue-50 border border-blue-100 rounded-2xl">
+                    <p class="text-xs text-blue-600 font-semibold">Dijawab</p>
+                    <p id="sum-answered" class="text-xl font-extrabold text-blue-800">0 / 30</p>
+                </div>
+                <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl">
+                    <p class="text-xs text-emerald-600 font-semibold">Benar</p>
+                    <p id="sum-correct" class="text-xl font-extrabold text-emerald-800">0</p>
+                </div>
+                <div class="p-3 bg-purple-50 border border-purple-100 rounded-2xl">
+                    <p class="text-xs text-purple-600 font-semibold">Nilai Akhir</p>
+                    <p id="sum-score" class="text-xl font-extrabold text-purple-800">0.0</p>
+                </div>
+            </div>
+
+            <!-- Feedback Message -->
+            <div id="sum-feedback-box" class="p-4 rounded-xl text-xs sm:text-sm font-medium text-center border">
+                <!-- Message inserted via JS -->
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="hideSummaryModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+                    Tutup
+                </button>
+                <button onclick="confirmReset(); hideSummaryModal();" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl text-xs transition">
+                    Coba Lagi Dari Awal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Kuis Interaktif Operasi & Aturan Bentuk Akar • Matematika SMA Kelas X</p>
+            <p class="text-slate-400 mt-0.5">Dilengkapi penyimpanan otomatis LocalStorage</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Quiz Engine -->
+    <script>
+        // --- 30 QUESTIONS DATABASE (Acak, Seimbang A/B/C/D, LaTeX Rapi) ---
+        const quizData = [
+            {
+                id: 1,
+                category: "Menyederhanakan",
+                question: "Bentuk sederhana dari $\\sqrt{128}$ adalah...",
+                options: ["$8\\sqrt{2}$", "$4\\sqrt{2}$", "$16\\sqrt{2}$", "$8\\sqrt{8}$"],
+                correct: 0, // A
+                explanation: "$\\sqrt{128} = \\sqrt{64 \\times 2} = \\sqrt{64} \\cdot \\sqrt{2} = 8\\sqrt{2}$."
+            },
+            {
+                id: 2,
+                category: "Menyederhanakan",
+                question: "Bentuk sederhana dari $\\sqrt{300}$ adalah...",
+                options: ["$5\\sqrt{3}$", "$10\\sqrt{6}$", "$10\\sqrt{3}$", "$30\\sqrt{3}$"],
+                correct: 2, // C
+                explanation: "$\\sqrt{300} = \\sqrt{100 \\times 3} = \\sqrt{100} \\cdot \\sqrt{3} = 10\\sqrt{3}$."
+            },
+            {
+                id: 3,
+                category: "Penjumlahan & Pengurangan",
+                question: "Hasil dari $\\sqrt{45} + \\sqrt{20} - \\sqrt{80}$ adalah...",
+                options: ["$2\\sqrt{5}$", "$\\sqrt{5}$", "$3\\sqrt{5}$", "$-\\sqrt{5}$"],
+                correct: 1, // B
+                explanation: "$\\sqrt{45} = 3\\sqrt{5}$, $\\sqrt{20} = 2\\sqrt{5}$, $\\sqrt{80} = 4\\sqrt{5}$.<br>Maka $3\\sqrt{5} + 2\\sqrt{5} - 4\\sqrt{5} = (3+2-4)\\sqrt{5} = 1\\sqrt{5} = \\sqrt{5}$."
+            },
+            {
+                id: 4,
+                category: "Penjumlahan & Pengurangan",
+                question: "Hasil sederhana dari $5\\sqrt{3} + 2\\sqrt{12} - \\sqrt{27}$ adalah...",
+                options: ["$4\\sqrt{3}$", "$5\\sqrt{3}$", "$7\\sqrt{3}$", "$6\\sqrt{3}$"],
+                correct: 3, // D
+                explanation: "$2\\sqrt{12} = 2(2\\sqrt{3}) = 4\\sqrt{3}$ dan $\\sqrt{27} = 3\\sqrt{3}$.<br>Operasi: $5\\sqrt{3} + 4\\sqrt{3} - 3\\sqrt{3} = (5 + 4 - 3)\\sqrt{3} = 6\\sqrt{3}$."
+            },
+            {
+                id: 5,
+                category: "Perkalian Akar",
+                question: "Bentuk sederhana dari $2\\sqrt{18} \\times \\sqrt{3}$ adalah...",
+                options: ["$6\\sqrt{6}$", "$3\\sqrt{6}$", "$18\\sqrt{2}$", "$12\\sqrt{6}$"],
+                correct: 0, // A
+                explanation: "$2\\sqrt{18} \\times \\sqrt{3} = 2\\sqrt{54} = 2\\sqrt{9 \\times 6} = 2 \\times 3\\sqrt{6} = 6\\sqrt{6}$."
+            },
+            {
+                id: 6,
+                category: "Perkalian Akar",
+                question: "Nilai dari $(3\\sqrt{2} + 2\\sqrt{3})(3\\sqrt{2} - 2\\sqrt{3})$ adalah...",
+                options: ["$12$", "$18$", "$6$", "$30$"],
+                correct: 2, // C
+                explanation: "Gunakan perkalian sekawan $(a+b)(a-b) = a^2 - b^2$.<br>$(3\\sqrt{2})^2 - (2\\sqrt{3})^2 = (9 \\times 2) - (4 \\times 3) = 18 - 12 = 6$."
+            },
+            {
+                id: 7,
+                category: "Kuadrat Bentuk Akar",
+                question: "Bentuk sederhana dari $(\\sqrt{7} + \\sqrt{5})^2$ adalah...",
+                options: ["$12 + \\sqrt{35}$", "$12 + 2\\sqrt{35}$", "$35 + 2\\sqrt{12}$", "$12 + 4\\sqrt{35}$"],
+                correct: 1, // B
+                explanation: "$(a+b)^2 = a^2 + 2ab + b^2$.<br>$(\\sqrt{7})^2 + 2(\\sqrt{7})(\\sqrt{5}) + (\\sqrt{5})^2 = 7 + 2\\sqrt{35} + 5 = 12 + 2\\sqrt{35}$."
+            },
+            {
+                id: 8,
+                category: "Kuadrat Bentuk Akar",
+                question: "Hasil penguadratan $(2\\sqrt{5} - 3\\sqrt{2})^2$ adalah...",
+                options: ["$38 - 6\\sqrt{10}$", "$26 - 12\\sqrt{10}$", "$38 + 12\\sqrt{10}$", "$38 - 12\\sqrt{10}$"],
+                correct: 3, // D
+                explanation: "$(a-b)^2 = a^2 - 2ab + b^2$.<br>$(2\\sqrt{5})^2 - 2(2\\sqrt{5})(3\\sqrt{2}) + (3\\sqrt{2})^2 = 20 - 12\\sqrt{10} + 18 = 38 - 12\\sqrt{10}$."
+            },
+            {
+                id: 9,
+                category: "Merasionalkan Penyebut",
+                question: "Bentuk rasional dari $\\frac{12}{\\sqrt{3}}$ adalah...",
+                options: ["$4\\sqrt{3}$", "$3\\sqrt{3}$", "$6\\sqrt{3}$", "$12\\sqrt{3}$"],
+                correct: 0, // A
+                explanation: "$\\frac{12}{\\sqrt{3}} \\times \\frac{\\sqrt{3}}{\\sqrt{3}} = \\frac{12\\sqrt{3}}{3} = 4\\sqrt{3}$."
+            },
+            {
+                id: 10,
+                category: "Merasionalkan Penyebut",
+                question: "Bentuk rasional dari $\\frac{10}{2\\sqrt{5}}$ adalah...",
+                options: ["$2\\sqrt{5}$", "$\\sqrt{5}$", "$5\\sqrt{5}$", "$10\\sqrt{5}$"],
+                correct: 1, // B
+                explanation: "$\\frac{10}{2\\sqrt{5}} = \\frac{5}{\\sqrt{5}} = \\frac{5\\sqrt{5}}{5} = \\sqrt{5}$."
+            },
+            {
+                id: 11,
+                category: "Merasionalkan Penyebut",
+                question: "Bentuk rasional dari $\\frac{8}{\\sqrt{5} + 1}$ adalah...",
+                options: ["$2\\sqrt{5} + 2$", "$4\\sqrt{5} - 4$", "$2\\sqrt{5} - 2$", "$\\sqrt{5} - 1$"],
+                correct: 2, // C
+                explanation: "Kalikan dengan sekawan $(\\sqrt{5}-1)$:<br>$\\frac{8(\\sqrt{5}-1)}{(\\sqrt{5})^2 - 1^2} = \\frac{8(\\sqrt{5}-1)}{5 - 1} = \\frac{8(\\sqrt{5}-1)}{4} = 2(\\sqrt{5}-1) = 2\\sqrt{5} - 2$."
+            },
+            {
+                id: 12,
+                category: "Merasionalkan Penyebut",
+                question: "Bentuk rasional dari $\\frac{6}{\\sqrt{7} - \\sqrt{3}}$ adalah...",
+                options: ["$\\frac{3(\\sqrt{7} + \\sqrt{3})}{2}$", "$3(\\sqrt{7} + \\sqrt{3})$", "$\\frac{\\sqrt{7} + \\sqrt{3}}{2}$", "$6(\\sqrt{7} + \\sqrt{3})$"],
+                correct: 0, // A
+                explanation: "Kalikan sekawan $(\\sqrt{7}+\\sqrt{3})$:<br>$\\frac{6(\\sqrt{7}+\\sqrt{3})}{7 - 3} = \\frac{6(\\sqrt{7}+\\sqrt{3})}{4} = \\frac{3(\\sqrt{7}+\\sqrt{3})}{2}$."
+            },
+            {
+                id: 13,
+                category: "Merasionalkan Penyebut",
+                question: "Bentuk rasional dari $\\frac{\\sqrt{3}}{\\sqrt{6} + \\sqrt{2}}$ adalah...",
+                options: ["$\\frac{3\\sqrt{2} + \\sqrt{6}}{4}$", "$\\frac{\\sqrt{6} - \\sqrt{2}}{4}$", "$\\frac{3\\sqrt{2} - \\sqrt{6}}{2}$", "$\\frac{3\\sqrt{2} - \\sqrt{6}}{4}$"],
+                correct: 3, // D
+                explanation: "$\\frac{\\sqrt{3}(\\sqrt{6}-\\sqrt{2})}{6-2} = \\frac{\\sqrt{18}-\\sqrt{6}}{4} = \\frac{3\\sqrt{2}-\\sqrt{6}}{4}$."
+            },
+            {
+                id: 14,
+                category: "Merasionalkan Pecahan Kompleks",
+                question: "Bentuk sederhana dari $\\frac{\\sqrt{5} - \\sqrt{2}}{\\sqrt{5} + \\sqrt{2}}$ adalah...",
+                options: ["$\\frac{7 + 2\\sqrt{10}}{3}$", "$\\frac{3 - 2\\sqrt{10}}{3}$", "$\\frac{7 - 2\\sqrt{10}}{3}$", "$7 - 2\\sqrt{10}$"],
+                correct: 2, // C
+                explanation: "Kalikan sekawan $(\\sqrt{5}-\\sqrt{2})$:<br>$\\frac{(\\sqrt{5}-\\sqrt{2})^2}{5-2} = \\frac{5 - 2\\sqrt{10} + 2}{3} = \\frac{7 - 2\\sqrt{10}}{3}$."
+            },
+            {
+                id: 15,
+                category: "Bentuk Khusus Akar",
+                question: "Bentuk sederhana dari $\\sqrt{11 + 2\\sqrt{30}}$ adalah...",
+                options: ["$\\sqrt{10} + \\sqrt{3}$", "$\\sqrt{6} + \\sqrt{5}$", "$\\sqrt{15} + \\sqrt{2}$", "$\\sqrt{8} + \\sqrt{3}$"],
+                correct: 1, // B
+                explanation: "Gunakan rumus $\\sqrt{(a+b) + 2\\sqrt{ab}} = \\sqrt{a} + \\sqrt{b}$.<br>Cari 2 angka: $a+b=11$ dan $a \\times b=30$. Pasangan tersebut adalah $6$ dan $5$.<br>Maka jawabannya $\\sqrt{6} + \\sqrt{5}$."
+            },
+            {
+                id: 16,
+                category: "Bentuk Khusus Akar",
+                question: "Bentuk sederhana dari $\\sqrt{9 - 2\\sqrt{14}}$ adalah...",
+                options: ["$\\sqrt{7} + \\sqrt{2}$", "$\\sqrt{6} - \\sqrt{3}$", "$\\sqrt{8} - 1$", "$\\sqrt{7} - \\sqrt{2}$"],
+                correct: 3, // D
+                explanation: "Cari 2 angka: $a+b=9$ dan $a \\times b=14$. Pasangannya $7$ dan $2$.<br>Maka $\\sqrt{9 - 2\\sqrt{14}} = \\sqrt{7} - \\sqrt{2}$."
+            },
+            {
+                id: 17,
+                category: "Bentuk Khusus Akar",
+                question: "Bentuk sederhana dari $\\sqrt{12 + 6\\sqrt{3}}$ adalah...",
+                options: ["$3 + \\sqrt{3}$", "$3 - \\sqrt{3}$", "$6 + \\sqrt{3}$", "$\\sqrt{9} + 3$"],
+                correct: 0, // A
+                explanation: "Ubah $6\\sqrt{3}$ menjadi $2\\sqrt{27}$, sehingga menjadi $\\sqrt{12 + 2\\sqrt{27}}$.<br>Cari $a+b=12$ dan $a \\times b=27 \\implies a=9, b=3$.<br>$\\sqrt{9} + \\sqrt{3} = 3 + \\sqrt{3}$."
+            },
+            {
+                id: 18,
+                category: "Bentuk Khusus Akar",
+                question: "Bentuk sederhana dari $\\sqrt{7 - 4\\sqrt{3}}$ adalah...",
+                options: ["$2 + \\sqrt{3}$", "$4 - \\sqrt{3}$", "$2 - \\sqrt{3}$", "$3 - \\sqrt{2}$"],
+                correct: 2, // C
+                explanation: "Ubah $4\\sqrt{3}$ menjadi $2\\sqrt{12}$, maka menjadi $\\sqrt{7 - 2\\sqrt{12}}$.<br>Cari $a+b=7$ dan $ab=12 \\implies a=4, b=3$.<br>$\\sqrt{4} - \\sqrt{3} = 2 - \\sqrt{3}$."
+            },
+            {
+                id: 19,
+                category: "Operasi Campuran",
+                question: "Hasil dari $\\sqrt{200} - \\sqrt{98} + \\sqrt{32}$ adalah...",
+                options: ["$6\\sqrt{2}$", "$7\\sqrt{2}$", "$8\\sqrt{2}$", "$9\\sqrt{2}$"],
+                correct: 1, // B
+                explanation: "$\\sqrt{200} = 10\\sqrt{2}$, $\\sqrt{98} = 7\\sqrt{2}$, $\\sqrt{32} = 4\\sqrt{2}$.<br>Operasi: $10\\sqrt{2} - 7\\sqrt{2} + 4\\sqrt{2} = 7\\sqrt{2}$."
+            },
+            {
+                id: 20,
+                category: "Pembagian Akar",
+                question: "Nilai sederhana dari $\\frac{\\sqrt{96}}{\\sqrt{6}}$ adalah...",
+                options: ["$2$", "$6$", "$16$", "$4$"],
+                correct: 3, // D
+                explanation: "Gunakan sifat $\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$.<br>$\\sqrt{\\frac{96}{6}} = \\sqrt{16} = 4$."
+            },
+            {
+                id: 21,
+                category: "Aplikasi Geometri",
+                question: "Sebuah persegi panjang memiliki panjang $(3 + \\sqrt{2})$ cm dan lebar $(3 - \\sqrt{2})$ cm. Luas persegi panjang tersebut adalah...",
+                options: ["$7\\text{ cm}^2$", "$5\\text{ cm}^2$", "$11\\text{ cm}^2$", "$9\\text{ cm}^2$"],
+                correct: 0, // A
+                explanation: "Luas $= p \\times l = (3+\\sqrt{2})(3-\\sqrt{2}) = 3^2 - (\\sqrt{2})^2 = 9 - 2 = 7\\text{ cm}^2$."
+            },
+            {
+                id: 22,
+                category: "Aplikasi Geometri (Pythagoras)",
+                question: "Segitiga siku-siku memiliki panjang sisi siku-siku $a = 2\\sqrt{6}$ cm dan $b = 5$ cm. Panjang hipotenusanya adalah...",
+                options: ["$\\sqrt{29}\\text{ cm}$", "$9\\text{ cm}$", "$7\\text{ cm}$", "$\\sqrt{31}\\text{ cm}$"],
+                correct: 2, // C
+                explanation: "$c = \\sqrt{a^2 + b^2} = \\sqrt{(2\\sqrt{6})^2 + 5^2} = \\sqrt{24 + 25} = \\sqrt{49} = 7\\text{ cm}$."
+            },
+            {
+                id: 23,
+                category: "Operasi Campuran",
+                question: "Bentuk sederhana dari $\\frac{3\\sqrt{2} \\times 2\\sqrt{6}}{\\sqrt{3}}$ adalah...",
+                options: ["$6\\sqrt{3}$", "$12\\sqrt{3}$", "$6$", "$12$"],
+                correct: 3, // D
+                explanation: "Pembilang: $3\\sqrt{2} \\times 2\\sqrt{6} = 6\\sqrt{12}$.<br>Pembagian: $\\frac{6\\sqrt{12}}{\\sqrt{3}} = 6\\sqrt{4} = 6 \\times 2 = 12$."
+            },
+            {
+                id: 24,
+                category: "Aljabar & Akar",
+                question: "Jika $x = \\sqrt{3} + \\sqrt{2}$ dan $y = \\sqrt{3} - \\sqrt{2}$, maka nilai dari $x^2 + y^2$ adalah...",
+                options: ["$5$", "$10$", "$12$", "$8$"],
+                correct: 1, // B
+                explanation: "$x^2 = (\\sqrt{3}+\\sqrt{2})^2 = 3 + 2\\sqrt{6} + 2 = 5 + 2\\sqrt{6}$.<br>$y^2 = (\\sqrt{3}-\\sqrt{2})^2 = 3 - 2\\sqrt{6} + 2 = 5 - 2\\sqrt{6}$.<br>$x^2 + y^2 = (5 + 2\\sqrt{6}) + (5 - 2\\sqrt{6}) = 10$."
+            },
+            {
+                id: 25,
+                category: "Perkalian Akar",
+                question: "Hasil dari $(2\\sqrt{3} + \\sqrt{5})(2\\sqrt{3} - \\sqrt{5})$ adalah...",
+                options: ["$7$", "$11$", "$17$", "$19$"],
+                correct: 0, // A
+                explanation: "$(2\\sqrt{3})^2 - (\\sqrt{5})^2 = (4 \\times 3) - 5 = 12 - 5 = 7$."
+            },
+            {
+                id: 26,
+                category: "Merasionalkan Penyebut",
+                question: "Bentuk sederhana dari $\\frac{4\\sqrt{3}}{2\\sqrt{2} - \\sqrt{6}}$ adalah...",
+                options: ["$4\\sqrt{6} - 6\\sqrt{2}$", "$2\\sqrt{6} + 3\\sqrt{2}$", "$4\\sqrt{6} + 6\\sqrt{2}$", "$4\\sqrt{6} + 2\\sqrt{2}$"],
+                correct: 2, // C
+                explanation: "Kalikan sekawan $(2\\sqrt{2}+\\sqrt{6})$:<br>$\\frac{4\\sqrt{3}(2\\sqrt{2}+\\sqrt{6})}{(2\\sqrt{2})^2 - (\\sqrt{6})^2} = \\frac{8\\sqrt{6} + 4\\sqrt{18}}{8 - 6} = \\frac{8\\sqrt{6} + 4(3\\sqrt{2})}{2} = 4\\sqrt{6} + 6\\sqrt{2}$."
+            },
+            {
+                id: 27,
+                category: "Bentuk Khusus Akar",
+                question: "Sederhanakan bentuk $\\sqrt{14 + 2\\sqrt{45}}$!",
+                options: ["$3 + \\sqrt{5}$", "$9 + \\sqrt{5}$", "$3 + \\sqrt{15}$", "$5 + \\sqrt{3}$"],
+                correct: 0, // A
+                explanation: "Cari $a+b=14$ dan $ab=45$. Angka tersebut adalah $9$ dan $5$.<br>Maka $\\sqrt{9} + \\sqrt{5} = 3 + \\sqrt{5}$."
+            },
+            {
+                id: 28,
+                category: "Bentuk Khusus Akar",
+                question: "Sederhanakan bentuk $\\sqrt{16 - 2\\sqrt{48}}$!",
+                options: ["$2\\sqrt{3} + 2$", "$2\\sqrt{3} - 2$", "$3\\sqrt{2} - 2$", "$4 - 2\\sqrt{3}$"],
+                correct: 1, // B
+                explanation: "Cari $a+b=16$ dan $ab=48$. Angka tersebut adalah $12$ dan $4$.<br>Maka $\\sqrt{12} - \\sqrt{4} = 2\\sqrt{3} - 2$."
+            },
+            {
+                id: 29,
+                category: "Aplikasi Volume Kubus",
+                question: "Sebuah kubus memiliki panjang rusuk $s = 4\\sqrt{3}$ cm. Volume kubus tersebut adalah...",
+                options: ["$64\\sqrt{3}\\text{ cm}^3$", "$144\\sqrt{3}\\text{ cm}^3$", "$256\\sqrt{3}\\text{ cm}^3$", "$192\\sqrt{3}\\text{ cm}^3$"],
+                correct: 3, // D
+                explanation: "$V = s^3 = (4\\sqrt{3})^3 = 4^3 \\times (\\sqrt{3})^3 = 64 \\times 3\\sqrt{3} = 192\\sqrt{3}\\text{ cm}^3$."
+            },
+            {
+                id: 30,
+                category: "Persamaan Bentuk Akar",
+                question: "Jika $\\frac{2}{\\sqrt{7} - \\sqrt{5}} = a\\sqrt{7} + b\\sqrt{5}$, maka nilai $a + b$ adalah...",
+                options: ["$1$", "$0$", "$2$", "$3$"],
+                correct: 2, // C
+                explanation: "$\\frac{2(\\sqrt{7}+\\sqrt{5})}{7-5} = \\frac{2(\\sqrt{7}+\\sqrt{5})}{2} = 1\\sqrt{7} + 1\\sqrt{5}$.<br>Diperoleh $a=1$ dan $b=1$, sehingga $a+b = 1+1 = 2$."
+            }
+        ];
+
+        // --- STATE MANAGEMENT WITH LOCALSTORAGE ---
+        const STORAGE_KEY = "quiz_bentuk_akar_sma_v1";
+        
+        let currentIndex = 0;
+        let userAnswers = {}; // { qIndex: selectedOptionIndex }
+
+        // Load saved state from LocalStorage
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    userAnswers = JSON.parse(saved);
+                }
+            } catch (e) {
+                console.error("Gagal membaca LocalStorage", e);
+                userAnswers = {};
+            }
+        }
+
+        // Save state to LocalStorage
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers));
+            } catch (e) {
+                console.error("Gagal menyimpan ke LocalStorage", e);
+            }
+        }
+
+        // Calculate score & progress
+        function calculateStats() {
+            const answeredKeys = Object.keys(userAnswers);
+            const answeredCount = answeredKeys.length;
+            let correctCount = 0;
+
+            answeredKeys.forEach(idxStr => {
+                const qIdx = parseInt(idxStr);
+                if (userAnswers[qIdx] === quizData[qIdx].correct) {
+                    correctCount++;
+                }
+            });
+
+            const score = Math.round((correctCount / quizData.length) * 100);
+
+            return { answeredCount, correctCount, score };
+        }
+
+        function updateHeaderStats() {
+            const { answeredCount, correctCount, score } = calculateStats();
+            document.getElementById('prog-text').innerText = `${answeredCount}/${quizData.length}`;
+            document.getElementById('score-text').innerText = `${score}`;
+
+            const pct = Math.round((answeredCount / quizData.length) * 100);
+            document.getElementById('completion-status').innerText = `${pct}% Selesai`;
+        }
+
+        // --- RENDER FUNCTIONS ---
+        function renderQuestionGrid() {
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = quizData.map((q, idx) => {
+                const isAnswered = userAnswers.hasOwnProperty(idx);
+                const isCorrect = isAnswered && userAnswers[idx] === q.correct;
+                const isActive = idx === currentIndex;
+
+                let bgClass = "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200";
+                if (isAnswered) {
+                    if (isCorrect) {
+                        bgClass = "bg-emerald-500 text-white border-emerald-600 font-bold";
+                    } else {
+                        bgClass = "bg-rose-500 text-white border-rose-600 font-bold";
+                    }
+                }
+
+                const ringClass = isActive ? "ring-2 ring-blue-600 ring-offset-2 scale-105 z-10" : "";
+
+                return `
+                    <button onclick="goToQuestion(${idx})" class="w-9 h-9 rounded-xl text-xs flex items-center justify-center border font-semibold transition-all ${bgClass} ${ringClass}">
+                        ${idx + 1}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function renderCurrentQuestion() {
+            const q = quizData[currentIndex];
+            const isAnswered = userAnswers.hasOwnProperty(currentIndex);
+            const selectedOpt = userAnswers[currentIndex];
+
+            // Render Badges & Category
+            document.getElementById('q-number-badge').innerText = `Soal ${currentIndex + 1} dari ${quizData.length}`;
+            document.getElementById('q-category-tag').innerText = q.category;
+
+            const statusBadge = document.getElementById('q-status-badge');
+            if (isAnswered) {
+                statusBadge.classList.remove('hidden');
+                if (selectedOpt === q.correct) {
+                    statusBadge.className = "text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1";
+                    statusBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> Jawaban Benar`;
+                } else {
+                    statusBadge.className = "text-xs font-bold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800 border border-rose-200 flex items-center gap-1";
+                    statusBadge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Jawaban Salah`;
+                }
+            } else {
+                statusBadge.classList.add('hidden');
+            }
+
+            // Question Text
+            document.getElementById('q-text').innerHTML = q.question;
+
+            // Options
+            const optsContainer = document.getElementById('options-container');
+            const labels = ["A", "B", "C", "D"];
+
+            optsContainer.innerHTML = q.options.map((optText, optIdx) => {
+                let btnStyle = "border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 bg-white text-slate-800";
+                let badgeStyle = "bg-slate-100 text-slate-600";
+
+                if (isAnswered) {
+                    if (optIdx === q.correct) {
+                        btnStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold ring-1 ring-emerald-500";
+                        badgeStyle = "bg-emerald-500 text-white";
+                    } else if (optIdx === selectedOpt && selectedOpt !== q.correct) {
+                        btnStyle = "border-rose-500 bg-rose-50 text-rose-900 ring-1 ring-rose-500";
+                        badgeStyle = "bg-rose-500 text-white";
+                    } else {
+                        btnStyle = "border-slate-200 bg-slate-50/60 text-slate-400 opacity-60";
+                        badgeStyle = "bg-slate-200 text-slate-400";
+                    }
+                }
+
+                return `
+                    <button 
+                        onclick="selectOption(${optIdx})" 
+                        ${isAnswered ? 'disabled' : ''} 
+                        class="p-4 rounded-xl border text-left flex items-center gap-3 transition-all ${btnStyle} cursor-pointer disabled:cursor-default"
+                    >
+                        <span class="w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${badgeStyle}">
+                            ${labels[optIdx]}
+                        </span>
+                        <span class="text-sm sm:text-base">${optText}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // Explanation Box
+            const expBox = document.getElementById('explanation-box');
+            if (isAnswered) {
+                expBox.classList.remove('hidden');
+                if (selectedOpt === q.correct) {
+                    expBox.className = "p-4 rounded-xl space-y-2 text-sm border bg-emerald-50/70 border-emerald-200 text-emerald-950";
+                    document.getElementById('exp-title').className = "font-bold flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-800";
+                } else {
+                    expBox.className = "p-4 rounded-xl space-y-2 text-sm border bg-rose-50/70 border-rose-200 text-rose-950";
+                    document.getElementById('exp-title').className = "font-bold flex items-center gap-2 text-xs uppercase tracking-wider text-rose-800";
+                }
+                document.getElementById('exp-content').innerHTML = q.explanation;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Prev/Next Button states
+            document.getElementById('btn-prev').disabled = currentIndex === 0;
+            document.getElementById('btn-next').disabled = currentIndex === quizData.length - 1;
+
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+
+            // Update Palette Grid
+            renderQuestionGrid();
+            updateHeaderStats();
+        }
+
+        // --- USER ACTIONS ---
+        function selectOption(optIdx) {
+            if (userAnswers.hasOwnProperty(currentIndex)) return; // Already answered
+
+            userAnswers[currentIndex] = optIdx;
+            saveState();
+            renderCurrentQuestion();
+        }
+
+        function goToQuestion(idx) {
+            if (idx >= 0 && idx < quizData.length) {
+                currentIndex = idx;
+                renderCurrentQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < quizData.length - 1) {
+                currentIndex++;
+                renderCurrentQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCurrentQuestion();
+            }
+        }
+
+        function confirmReset() {
+            if (confirm("Apakah Anda yakin ingin menghapus semua jawaban dan memulai kuis dari awal?")) {
+                userAnswers = {};
+                saveState();
+                currentIndex = 0;
+                renderCurrentQuestion();
+            }
+        }
+
+        // Summary Modal Functions
+        function showSummaryModal() {
+            const { answeredCount, correctCount, score } = calculateStats();
+            document.getElementById('sum-answered').innerText = `${answeredCount} / ${quizData.length}`;
+            document.getElementById('sum-correct').innerText = `${correctCount}`;
+            document.getElementById('sum-score').innerText = `${score}.0`;
+
+            const fbBox = document.getElementById('sum-feedback-box');
+            if (score >= 85) {
+                fbBox.className = "p-4 rounded-xl text-xs sm:text-sm font-medium text-center border bg-emerald-50 border-emerald-200 text-emerald-800";
+                fbBox.innerHTML = `🎉 <b>Sangat Luar Biasa!</b> Anda telah menguasai operasi & aturan bentuk akar dengan sangat baik. Siap untuk ujian sekolah!`;
+            } else if (score >= 70) {
+                fbBox.className = "p-4 rounded-xl text-xs sm:text-sm font-medium text-center border bg-blue-50 border-blue-200 text-blue-800";
+                fbBox.innerHTML = `👍 <b>Hasil Bagus!</b> Pemahaman Anda sudah cukup kuat. Pelajari kembali pembahasan di nomor yang salah untuk hasil sempurna.`;
+            } else {
+                fbBox.className = "p-4 rounded-xl text-xs sm:text-sm font-medium text-center border bg-amber-50 border-amber-200 text-amber-800";
+                fbBox.innerHTML = `💪 <b>Tetap Semangat!</b> Baca kembali e-modul materi dan contoh soal, lalu coba kuis ini sekali lagi ya!`;
+            }
+
+            document.getElementById('summary-modal').classList.remove('hidden');
+        }
+
+        function hideSummaryModal() {
+            document.getElementById('summary-modal').classList.add('hidden');
+        }
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            renderCurrentQuestion();
+        });
+    </script>
+</body>
+</html>
